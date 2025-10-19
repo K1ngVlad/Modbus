@@ -11,10 +11,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "modbus-serial": "^8.0.23"
+    "modbus-serial": "^8.0.23",
+    "websocket": "^1.0.35"
   },
   "devDependencies": {
     "@types/node": "^24.7.2",
+    "@types/websocket": "^1.0.10",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }

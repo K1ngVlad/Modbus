@@ -10,7 +10,7 @@ type ID = number;
 export class ModbusPoller {
   private readonly client: ModbusClient | null = null;
   private tagsCount: number = 0;
-  private metersIdList: ID[] = [];
+  private devicesIdList: ID[] = [];
   private interval: number = 1000;
   private timer: NodeJS.Timeout | null = null;
   private callback: (results: number[][]) => unknown = () => {};
@@ -26,8 +26,8 @@ export class ModbusPoller {
     return this;
   }
 
-  public setMeters(metersIdList: ID[]): ModbusPoller {
-    this.metersIdList = metersIdList;
+  public setDevices(devicesIdList: ID[]): ModbusPoller {
+    this.devicesIdList = devicesIdList;
     return this;
   }
 
@@ -42,7 +42,7 @@ export class ModbusPoller {
   }
 
   public start(): ModbusPoller {
-    this.timer = setInterval(() => this.readMeters(), this.interval);
+    this.timer = setInterval(() => this.readDevices(), this.interval);
     return this;
   }
 
@@ -55,7 +55,7 @@ export class ModbusPoller {
     return this;
   }
 
-  private async readMeter(meter: ID): Promise<number[]> {
+  private async readDevice(meter: ID): Promise<number[]> {
     if (this.client) {
       try {
         this.client.setID(meter);
@@ -75,10 +75,10 @@ export class ModbusPoller {
     return new Array(this.tagsCount).fill(0);
   }
 
-  private async readMeters(): Promise<void> {
+  private async readDevices(): Promise<void> {
     try {
       const results = await Promise.all(
-        this.metersIdList.map((meter) => this.readMeter(meter))
+        this.devicesIdList.map((device) => this.readDevice(device))
       );
       this.callback(results);
     } catch (error) {

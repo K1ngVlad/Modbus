@@ -1,19 +1,29 @@
-import { ModbusPoller } from './modules';
+import config from './config.json';
 
-const ADRESS = '127.0.0.1';
-const PORT = 502;
+import { ModbusPoller, DataProcessor, WebsocketClient } from './modules';
 
-const TAGS_COUNT = 10;
-const METERS = [1, 2];
-const INTERVAL = 1000;
+const arg = process.argv[0];
 
-const modbusPoller = new ModbusPoller(ADRESS, { port: PORT });
+const instanceNum = typeof arg === 'number' ? arg : 0;
+
+const modbusPoller = new ModbusPoller(config.IP, config.options);
+
+const dataProcessor = new DataProcessor(config.tagsMetadata);
+
+const webSocketClient = new WebsocketClient();
 
 modbusPoller
-  .setTagsCount(TAGS_COUNT)
-  .setMeters(METERS)
-  .setInterval(INTERVAL)
+  .setTagsCount(config.tagsMetadata.count)
+  .setDevices(config.devices[instanceNum])
+  .setInterval(config.intervalTimeout)
   .setCallback((results) => {
-    console.log(results);
+    results.forEach((result) => {
+      const tags = dataProcessor.normalize(result);
+      tags.forEach((tag) => {
+        console.log(`${tag.name}: ${tag.value.toFixed(2)} ${tag.unit}`);
+        webSocketClient.sendTagData(tag);
+      });
+      console.log('\n ____ \n');
+    });
   })
   .start();
