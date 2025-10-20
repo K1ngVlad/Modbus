@@ -16,8 +16,31 @@ export type TagsMetadata = {
   data: TagMetadata[];
 };
 
+export type DeviceMetadata = {
+  id: number;
+  name: string;
+};
+
+export type DevicesMetadata = DeviceMetadata[];
+
 export class DataProcessor {
-  constructor(private readonly tagsMetadata: TagsMetadata) {}
+  constructor(
+    private readonly tagsMetadata: TagsMetadata,
+    private readonly devicesMetadata: DevicesMetadata,
+    private readonly devices: number[]
+  ) {}
+
+  public getDeviceName(index: number): string | null {
+    const device = this.devicesMetadata.find(
+      (device) => device.id === this.devices[index]
+    );
+
+    if (device) {
+      return device.name;
+    }
+
+    return null;
+  }
 
   public normalize(tags: number[]): TagData[] {
     return tags.map((tag: number, index: number) =>
