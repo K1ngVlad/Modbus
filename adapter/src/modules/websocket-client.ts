@@ -1,33 +1,33 @@
-import ws from 'websocket';
+import { io, Socket } from 'socket.io-client';
 
 import { TagData } from './data-processor';
 
 export class WebsocketClient {
-  private readonly client: ws.client;
-  private connection: ws.connection | null = null;
+  private readonly socket: Socket;
 
   constructor() {
-    this.client = new ws.client();
+    const socket = io('http://localhost:3000');
 
-    this.client.on('connect', (connection) => {
-      this.connection = connection;
+    this.socket = socket;
+
+    console.log('Сокет');
+
+    socket.on('connect', () => {
+      console.log('Подключение');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Отключение');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.log(`Ошибка подключения: ${err.message}`);
     });
   }
 
-  public open(adress: string): WebsocketClient {
-    this.close();
-    this.client.connect(adress);
-    return this;
-  }
-
-  public close(): WebsocketClient {
-    this.connection?.close();
-    this.connection = null;
-    return this;
-  }
-
   public sendTagData(tagData: TagData) {
-    this.connection?.send(tagData);
-    return this;
+    if (this.socket.connected) {
+      this.socket.emit('newMessage', { tagData });
+    }
   }
 }
