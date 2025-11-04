@@ -22,12 +22,11 @@ modbusPoller
   .setInterval(config.intervalTimeout)
   .setCallback((results) => {
     results.forEach((result, index) => {
-      const name = dataProcessor.getDeviceName(index);
+      const deviceName = dataProcessor.getDeviceName(index) || '';
       const tags = dataProcessor.normalize(result);
-      console.log(name);
       tags.forEach((tag) => {
         console.log(`${tag.name}: ${tag.value.toFixed(2)} ${tag.unit}`);
-        webSocketClient.sendTagData(tag);
+        webSocketClient.sendTagData({ ...tag, deviceName });
       });
       console.log('\n ____ \n');
     });

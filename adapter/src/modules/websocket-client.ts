@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-import { TagData } from './data-processor';
+import { FullTagData } from './data-processor';
 
 export class WebsocketClient {
   private readonly socket: Socket;
@@ -25,7 +25,7 @@ export class WebsocketClient {
     });
   }
 
-  public sendTagData(tagData: TagData) {
+  public sendTagData(tagData: FullTagData) {
     if (this.socket.connected) {
       this.socket.emit('newMessage', { tagData });
     }

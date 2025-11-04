@@ -11,6 +11,10 @@ export type TagData = {
   value: number;
 };
 
+export type FullTagData = TagData & {
+  deviceName: string;
+};
+
 export type TagsMetadata = {
   count: number;
   data: TagMetadata[];
