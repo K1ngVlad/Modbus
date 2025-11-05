@@ -3,8 +3,12 @@
   "options": {
     "port": 502
   },
-  "intervalTimeout": 1000,
-  "devices": [[1, 2], [3, 4], [5, 6]],
+  "intervalTimeout": 500,
+  "devices": [
+    [1, 2],
+    [3, 4],
+    [5, 6]
+  ],
   "tagsMetadata": {
     "count": 4,
     "data": [

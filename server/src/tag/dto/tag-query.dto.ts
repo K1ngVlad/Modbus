@@ -5,3 +5,11 @@ export class TagQueryDto {
   endDate?: Date;
   limit?: number;
 }
+
+export interface TagQueryRequest {
+  tagNames?: string;
+  deviceNames?: string;
+  startDate?: Date;
+  endDate?: Date;
+  limit?: number;
+}

@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { TagQueryDto } from './dto';
+import { TagQueryRequest } from './dto/tag-query.dto';
 
 @Controller('tag')
 export class TagController {
@@ -12,7 +13,13 @@ export class TagController {
   }
 
   @Get('chart-data')
-  async getChartData(@Query() query: TagQueryDto) {
-    return this.tagService.getChartData(query);
+  async getChartData(@Query() query: TagQueryRequest) {
+    const dto: TagQueryDto = {
+      ...query,
+      tagNames: query.tagNames.split(',').map((item) => item.trim()),
+      deviceNames: query.deviceNames.split(',').map((item) => item.trim()),
+    };
+
+    return this.tagService.getChartData(dto);
   }
 }

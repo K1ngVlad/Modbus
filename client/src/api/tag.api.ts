@@ -13,30 +13,25 @@ export interface TagQuery {
 export interface ChartDataPoint {
   timestamp: string;
   datetime: string;
-  [key: string]: number | string;
+  [key: string]: number | string; // deviceName-tagName: value
 }
 
-class TagApi {
-  //   async getChartData(query: TagQuery): Promise<ChartDataPoint[]> {
-  //     const response = q
-  //     // const params = new URLSearchParams();
+export const tagApi = {
+  getChartData: async (query: TagQuery): Promise<ChartDataPoint[]> => {
+    const params = new URLSearchParams();
 
-  //     // if (query.tagNames) params.append('tagNames', query.tagNames.join(','));
-  //     // if (query.deviceNames)
-  //     //   params.append('deviceNames', query.deviceNames.join(','));
-  //     // if (query.startDate)
-  //     //   params.append('startDate', query.startDate.toISOString());
-  //     // if (query.endDate) params.append('endDate', query.endDate.toISOString());
-  //     // if (query.limit) params.append('limit', query.limit.toString());
+    console.log(query.tagNames);
+    console.log(query.deviceNames);
 
-  //     // const response = await axios.get(`${API_BASE}/chart-data`, { params });
-  //     // return response.data;
-  //   }
+    if (query.tagNames) params.append('tagNames', query.tagNames.join(','));
+    if (query.deviceNames)
+      params.append('deviceNames', query.deviceNames.join(','));
+    if (query.startDate)
+      params.append('startDate', query.startDate.toISOString());
+    if (query.endDate) params.append('endDate', query.endDate.toISOString());
+    if (query.limit) params.append('limit', query.limit.toString());
 
-  async getChartData() {
-    const response = await axios.get(API_BASE);
-    console.log(response.data);
-  }
-}
-
-export const tagApi = new TagApi();
+    const response = await axios.get(`${API_BASE}/chart-data`, { params });
+    return response.data;
+  },
+};
